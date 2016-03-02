@@ -1,0 +1,45 @@
+{
+  "name": "fend-project5",
+  "version": "1.0.0",
+  "description": "Udacity Front End Web Developer Nanodegree Project 5",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:js": "webpack --config webpack.config.js --progress --profile --colors",
+    "build:css": "stylus app/stylesheets/main.styl -o build/main.css",
+    "build:html": "cat app/html/index.html > build/index.html",
+    "build:asset": "cp -a app/assets/. build/assets",
+    "dev": "parallelshell 'npm run serve -s' 'npm run watch -s'",
+    "serve": "http-server -p 8080 build/",
+    "watch": "parallelshell 'npm run watch:js' 'npm run watch:css' 'npm run watch:html' 'npm run watch:asset'",
+    "watch:js": "webpack --config webpack.config.js --progress --profile --colors --watch",
+    "watch:css": "watch 'npm run build:css' app/stylesheets --wait=2",
+    "watch:html": "watch 'npm run build:html' app/html",
+    "watch:asset": "watch 'npm run build:asset' app/assets --wait=5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathanlie94/fend-project5.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonathanlie94/fend-project5/issues"
+  },
+  "homepage": "https://github.com/jonathanlie94/fend-project5#readme",
+  "dependencies": {
+    "knockout": "^3.4.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.6.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "css-loader": "^0.23.1",
+    "http-server": "^0.9.0",
+    "parallelshell": "^2.0.0",
+    "style-loader": "^0.13.0",
+    "stylus": "^0.53.0",
+    "watch": "^0.17.1",
+    "webpack": "^1.12.14"
+  }
+}
