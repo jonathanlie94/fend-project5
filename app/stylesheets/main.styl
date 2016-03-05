@@ -1,2 +1,34 @@
-.some-class
-  margin-bottom: 10px
+@import 'variables/color'
+@import 'mixins/mixins'
+@import 'mainContent'
+@import 'sideContent'
+
+html
+  width: 100%
+  height: 100%
+  font-family: 'Roboto'
+  font-size: 16px
+  font-weight: 300
+  background-color: $indigo
+  color: $white
+
+  body
+    margin: 0px
+    height: 100%
+
+    .main-container
+      width: 100%
+      height: 100%
+      overflow-y: auto
+      overflow-x: hidden
+      display: flex
+
+    #map
+      width: 100%
+      height: 100%
+
+    a
+      color: $blue
+      &:hover
+        transition: 0.2s ease
+        cursor: pointer

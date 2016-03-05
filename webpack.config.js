@@ -12,6 +12,7 @@ var uglifyJsPlugin = new webpack.optimize.UglifyJsPlugin();
 
 var entry = './app/scripts/main.js';
 var buildDir = 'build';
+var devtool = 'source-map';
 
 var plugins = [
   providePlugin,
@@ -21,7 +22,7 @@ var plugins = [
 var config = {
   entry: entry,
   output: {
-    path: path.join('./', buildDir),
+    path: path.join(__dirname, buildDir),
     filename: 'main.js'
   },
   debug: true,
@@ -46,10 +47,11 @@ var config = {
       }
     ]
   },
+  devtool: devtool,
   resolve: {
-    root: path.join('./', 'app/scripts')
+    root: path.join(__dirname, 'app/scripts')
   },
   plugins: plugins
-}
+};
 
 module.exports = config;

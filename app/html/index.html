@@ -1,9 +1,38 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500" rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://code.getmdl.io/1.1.2/material.pink-indigo.min.css" rel="stylesheet">
+    <link href="main.css" rel='stylesheet' type='text/css'>
+  </head>
   <body>
-    <div>
-      <h1 data-bind="text: name"></h1>
-      <h2 data-bind="text: catNumber"></h2>
+    <div class="main-container">
+      <div class="side-content">
+        <div class="search-bar-container">
+          <div class="mdl-textfield mdl-js-textfield search-bar">
+            <label class="mdl-button mdl-js-button mdl-button--icon" for="sample6">
+              <i class="material-icons">search</i>
+            </label>
+            <div class="mdl-textfield__expandable-holder">
+              <input class="mdl-textfield__input" data-bind='value: keyword,
+                valueUpdate: "afterkeydown"' type="text" id="search-keyword">
+              <label class="mdl-textfield__label" for="search-keyword">Expandable Input</label>
+            </div>
+          </div>
+        </div>
+        <div class="location-list-container">
+
+        </div>
+      </div>
+      <div class="main-content">
+        <div id="map"></div>
+      </div>
     </div>
+
+
   </body>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=en"></script>
   <script type="text/javascript" src="main.js"></script>
+  <script defer src="https://code.getmdl.io/1.1.2/material.min.js"></script>
 </html>
