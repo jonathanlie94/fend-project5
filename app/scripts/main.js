@@ -1,4 +1,5 @@
 import ko from 'knockout';
+import Helper from 'utils/helper';
 import Place from 'models/place';
 
 class ViewModel {
@@ -8,14 +9,28 @@ class ViewModel {
     });
     this._browserSupportFlag = false;
     this._initialLocation = null;
+
+    this.filter = ko.observable(''); // Search keyword
     this.places = ko.observableArray();
+
+    this.filteredPlaces = ko.computed(() => {
+      if (!this.filter()) {
+        return this.places();
+      } else {
+        return ko.utils.arrayFilter(this.places(), (place) => {
+          return (Helper.containsKeywords(place.name(), this.filter())) ||
+            (Helper.containsKeywords(place.address(), this.filter())) ||
+            (Helper.containsKeywords(place.types(), this.filter()))
+        });
+      }
+    });
+
     this.selectedPlace = ko.observable("");
     this.defaultLocations = {
       siberia: new google.maps.LatLng(60, 105),
       newyork: new google.maps.LatLng(40.69847032728747, -73.9514422416687)
     };
     this.getCurrentLocation();
-    this.keyword = ko.observable(''); // Search keyword
   }
 
   getCurrentLocation() {
@@ -67,7 +82,8 @@ class ViewModel {
             results[i].icon,
             results[i].photos,
             results[i].types,
-            results[i].rating
+            results[i].rating,
+            results[i].vicinity
           );
           console.log(place);
           this.places.push(place);

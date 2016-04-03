@@ -15,23 +15,25 @@
           </div>
           <div class="nbm-search-bar__content">
             <div class="mdl-textfield mdl-js-textfield">
-              <input class="mdl-textfield__input" data-bind='value: keyword,
+              <input class="mdl-textfield__input" data-bind='value: filter,
                 valueUpdate: "afterkeydown"' type="text" id="search-keyword">
               <label class="mdl-textfield__label" for="search-keyword"></label>
             </div>
           </div>
 
         </div>
-        <ul data-bind="foreach: places">
-          <li class="nbm-item-list__item" data-bind="text: name"></li>
+        <ul data-bind="foreach: filteredPlaces">
+          <li class="nbm-item-list__item" data-bind="text: name">
+            <div data-bind="text:name"></div>
+            <div data-bind="text:"></div>
+          </li>
+
         </ul>
       </div>
       <div class="nbm-main-content">
         <div id="map"></div>
       </div>
     </div>
-
-
   </body>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=en&key=AIzaSyCtT0znrs_Zvlxg6WYqrLoNNtr1nF1Cjh8&libraries=places"></script>
   <script type="text/javascript" src="main.js"></script>
