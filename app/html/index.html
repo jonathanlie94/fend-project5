@@ -7,25 +7,26 @@
     <link href="main.css" rel='stylesheet' type='text/css'>
   </head>
   <body>
-    <div class="main-container">
-      <div class="side-content">
-        <div class="search-bar-container">
-          <div class="mdl-textfield mdl-js-textfield search-bar">
-            <label class="mdl-button mdl-js-button mdl-button--icon" for="search-keyword">
-              <i class="material-icons">search</i>
-            </label>
-            <div class="mdl-textfield__expandable-holder">
+    <div class="nbm-main-container">
+      <div class="nbm-side-content">
+        <div class="nbm-search-bar">
+          <div class="nbm-search-bar__icon">
+            <i class="material-icons">search</i>
+          </div>
+          <div class="nbm-search-bar__content">
+            <div class="mdl-textfield mdl-js-textfield">
               <input class="mdl-textfield__input" data-bind='value: keyword,
                 valueUpdate: "afterkeydown"' type="text" id="search-keyword">
               <label class="mdl-textfield__label" for="search-keyword"></label>
             </div>
           </div>
-        </div>
-        <div class="location-list-container">
 
         </div>
+        <ul data-bind="foreach: places">
+          <li class="nbm-item-list__item" data-bind="text: name"></li>
+        </ul>
       </div>
-      <div class="main-content">
+      <div class="nbm-main-content">
         <div id="map"></div>
       </div>
     </div>
