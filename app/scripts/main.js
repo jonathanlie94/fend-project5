@@ -1,6 +1,5 @@
 import ko from 'knockout';
 import Helper from 'utils/helper';
-import Place from 'models/place';
 
 class ViewModel {
   constructor() {
@@ -9,6 +8,8 @@ class ViewModel {
     });
     this._browserSupportFlag = false;
     this._initialLocation = null;
+
+    this.infowWindow = new google.maps.InfoWindow();
 
     this.filter = ko.observable(''); // Search keyword
     this.places = ko.observableArray();
@@ -25,11 +26,13 @@ class ViewModel {
       }
     });
 
+
     this.selectedPlace = ko.observable("");
     this.defaultLocations = {
       siberia: new google.maps.LatLng(60, 105),
       newyork: new google.maps.LatLng(40.69847032728747, -73.9514422416687)
     };
+
     this.getCurrentLocation();
   }
 
@@ -71,29 +74,41 @@ class ViewModel {
       ),
       radius: '20000'
     }, (results, status) => {
-      console.log(status);
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         for (let i = 0; i < results.length; i ++) {
-          console.log(results[i]);
-          let place = new Place(
-            results[i].lat,
-            results[i].lng,
-            results[i].name,
-            results[i].icon,
-            results[i].photos,
-            results[i].types,
-            results[i].rating,
-            results[i].vicinity
-          );
-          console.log(place);
-          this.places.push(place);
+          this.places.push({
+            lat: results[i].geometry.location.lat(),
+            lng: results[i].geometry.location.lng(),
+            name: results[i].name,
+            icon: results[i].icon,
+            photos: results[i].photos,
+            types: results[i].types,
+            rating: results[i].rating,
+            vicinity: results[i].vicinity
+          });
         }
+        this._plotMarkers();
       }
-      console.log(this.places());
     });
   }
 
+  _plotMarkers() {
+    let markers = [];
+    this.places().forEach((place) => {
+      let marker = new google.maps.Marker({
+        position: new google.maps.LatLng(
+          place.lat,
+          place.lng
+        ),
+        map: this.map,
+        title: place.name
+      });
 
+      markers.push(marker);
+    });
+
+    return markers;
+  }
 }
 
 export default ViewModel;

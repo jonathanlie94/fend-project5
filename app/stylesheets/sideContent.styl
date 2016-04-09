@@ -3,6 +3,7 @@
   max-width: 350px
   height: 100%
   max-height: 100%
+  position: relative
   color: $white1
   overflow-y: auto
   overflow-x: hidden
@@ -15,6 +16,8 @@
   font-size: 20px
   height: 3em
   display: block
+  position: absolute
+  background-color: $indigo
 
   &__icon
     width: 0.5em
@@ -32,8 +35,10 @@
     .mdl-textfield__input
       border-bottom: 1px solid $white1
 
-.nbm-item-list
+.nbm-list
+  margin-top: 5em
   overflow-y: scroll
+  width: calc(100% - 1em)
   &__item
     padding: 0.5em 0 0.5em 1em
     line-height: 32px
