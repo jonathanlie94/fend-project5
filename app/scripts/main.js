@@ -2,6 +2,14 @@ import ko from 'knockout';
 import Helper from 'utils/helper';
 import PlaceModel from 'models/placeModel';
 
+/* TODO:
+  1. Custom InfoWindow, containing info from Google Maps Places,
+     and Foursquare, and Yelp Search API
+  2. Show error messages if third-party API failed at the top
+  3. Cater for responsiveness across different screen sizes
+*/
+
+
 class ViewModel {
   constructor() {
     this.map = new google.maps.Map(document.getElementById('map'), {
