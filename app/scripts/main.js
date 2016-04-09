@@ -7,6 +7,8 @@ import PlaceModel from 'models/placeModel';
      and Foursquare, and Yelp Search API
   2. Show error messages if third-party API failed at the top
   3. Cater for responsiveness across different screen sizes
+  4. Handle clicks on the list item and the marker. Highlight the item clicked,
+     and focus on the marker
 */
 
 
