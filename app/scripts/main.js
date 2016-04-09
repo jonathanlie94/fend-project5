@@ -1,11 +1,15 @@
 import ko from 'knockout';
 import Helper from 'utils/helper';
+import PlaceModel from 'models/placeModel';
 
 class ViewModel {
   constructor() {
     this.map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10
     });
+
+    this.markers = [];
+    this.visibleMarkers = [];
     this._browserSupportFlag = false;
     this._initialLocation = null;
 
@@ -20,10 +24,14 @@ class ViewModel {
       } else {
         return ko.utils.arrayFilter(this.places(), (place) => {
           return (Helper.containsKeywords(place.name(), this.filter())) ||
-            (Helper.containsKeywords(place.address(), this.filter())) ||
+            (Helper.containsKeywords(place.vicinity(), this.filter())) ||
             (Helper.containsKeywords(place.types(), this.filter()))
         });
       }
+    });
+
+    this.filter.subscribe((newValue) => {
+      this._toggleMarkersVisibility();
     });
 
 
@@ -76,7 +84,7 @@ class ViewModel {
     }, (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         for (let i = 0; i < results.length; i ++) {
-          this.places.push({
+          this.places.push(new PlaceModel({
             lat: results[i].geometry.location.lat(),
             lng: results[i].geometry.location.lng(),
             name: results[i].name,
@@ -85,7 +93,7 @@ class ViewModel {
             types: results[i].types,
             rating: results[i].rating,
             vicinity: results[i].vicinity
-          });
+          }));
         }
         this._plotMarkers();
       }
@@ -93,21 +101,51 @@ class ViewModel {
   }
 
   _plotMarkers() {
-    let markers = [];
     this.places().forEach((place) => {
       let marker = new google.maps.Marker({
         position: new google.maps.LatLng(
-          place.lat,
-          place.lng
+          place.lat(),
+          place.lng()
         ),
+        icon: {
+          url: place.icon(),
+          scaledSize: new google.maps.Size(28, 28),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(0, 0)
+        },
         map: this.map,
-        title: place.name
+        title: place.name()
       });
 
-      markers.push(marker);
+      this.markers.push(marker);
+      this.visibleMarkers.push(marker);
     });
 
-    return markers;
+    this._setMapOnAll(null, this.markers);
+    this._setMapOnAll(this.map, this.visibleMarkers);
+  }
+
+  _setMapOnAll(map, markers) {
+    markers.forEach((marker) => {
+      marker.setMap(map);
+    });
+  }
+
+  _toggleMarkersVisibility() {
+    this._setMapOnAll(null, this.visibleMarkers);
+    this.visibleMarkers = this.markers.filter((marker) => {
+      const filteredPlaces = this.filteredPlaces();
+
+      for (let i = 0; i < filteredPlaces.length; i ++) {
+        if (filteredPlaces[i].name() == marker.title) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+
+    this._setMapOnAll(this.map, this.visibleMarkers);
   }
 }
 
