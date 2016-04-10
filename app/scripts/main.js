@@ -6,9 +6,8 @@ import PlaceModel from 'models/placeModel';
   1. Custom InfoWindow, containing info from Google Maps Places,
      and Foursquare, and Yelp Search API
   2. Show error messages if third-party API failed at the top
-  3. Cater for responsiveness across different screen sizes
-  4. Handle clicks on the list item and the marker. Highlight the item clicked,
-     and focus on the marker
+  3. Cater for responsiveness across different screen sizes (change side content
+     to MDL layout)
 */
 
 const zoomLevel = 10;
@@ -18,7 +17,7 @@ const defaultLocations = {
   newyork: new google.maps.LatLng(40.69847032728747, -73.9514422416687)
 };
 
-const markerAnimationTimeout = 1000;
+const markerAnimationTimeout = 750;
 
 class ViewModel {
   constructor() {
@@ -143,11 +142,7 @@ class ViewModel {
           lat: this.position.lat,
           lng: this.position.lng,
         });
-        self._resetMarkerAnimations();
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(() => marker.setAnimation(null), markerAnimationTimeout);
       });
-
 
       this.markers.push(marker);
       this.visibleMarkers.push(marker);
@@ -167,6 +162,12 @@ class ViewModel {
   _updateAndOpenInfoWindow(object) {
     // Object can be either a marker or a placeModel
     let marker =  this._findMarker(object.lat(), object.lng());
+
+    this.map.setCenter(new google.maps.LatLng(object.lat(), object.lng()));
+
+    this._resetMarkerAnimations();
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(() => marker.setAnimation(null), markerAnimationTimeout);
     let div = `
       <div class='info-window'>
         ${marker.place.name()}
@@ -194,16 +195,18 @@ class ViewModel {
 
   _toggleMarkersVisibility() {
     this._setMapOnAll(null, this.visibleMarkers);
+    console.log(this.visibleMarkers);
     this.visibleMarkers = this.markers.filter((marker) => {
       const filteredPlaces = this.filteredPlaces();
 
       for (let i = 0; i < filteredPlaces.length; i ++) {
-        if (filteredPlaces[i].name() == marker.title) {
+        if (filteredPlaces[i].name() == marker.place.name()) {
           return true;
         }
       }
       return false;
     });
+    console.log(this.visibleMarkers);
 
     this._setMapOnAll(this.map, this.visibleMarkers);
   }
