@@ -11,19 +11,26 @@ import PlaceModel from 'models/placeModel';
      and focus on the marker
 */
 
+const zoomLevel = 10;
+
+const defaultLocations = {
+  siberia: new google.maps.LatLng(60, 105),
+  newyork: new google.maps.LatLng(40.69847032728747, -73.9514422416687)
+};
 
 class ViewModel {
   constructor() {
     this.map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10
+      zoom: zoomLevel
     });
 
     this.markers = [];
     this.visibleMarkers = [];
+
     this._browserSupportFlag = false;
     this._initialLocation = null;
 
-    this.infowWindow = new google.maps.InfoWindow();
+    this.infoWindow = new google.maps.InfoWindow();
 
     this.filter = ko.observable(''); // Search keyword
     this.places = ko.observableArray();
@@ -44,12 +51,7 @@ class ViewModel {
       this._toggleMarkersVisibility();
     });
 
-
     this.selectedPlace = ko.observable("");
-    this.defaultLocations = {
-      siberia: new google.maps.LatLng(60, 105),
-      newyork: new google.maps.LatLng(40.69847032728747, -73.9514422416687)
-    };
 
     this.getCurrentLocation();
   }
@@ -74,10 +76,10 @@ class ViewModel {
 
   _handleNoGeolocation(errorFlag) {
     if (errorFlag == true) {
-      this._initialLocation = this.defaultLocations.siberia;
+      this._initialLocation = defaultLocations.siberia;
     }
     else {
-      this._initialLocation = this.defaultLocations.newyork;
+      this._initialLocation = defaultLocations.newyork;
     }
     this.map.setCenter(this._initialLocation);
     this.requestPlaces();
@@ -124,7 +126,16 @@ class ViewModel {
           anchor: new google.maps.Point(0, 0)
         },
         map: this.map,
-        title: place.name()
+        title: place.name(),
+        animation: google.maps.Animation.DROP,
+      });
+
+      let self = this;
+
+      marker.addListener('click', function () {
+        let infoWindow = self.infoWindow;
+        infoWindow.close();
+        self._updateAndOpenInfoWindow(this); // Pass the marker itself
       });
 
       this.markers.push(marker);
@@ -133,6 +144,12 @@ class ViewModel {
 
     this._setMapOnAll(null, this.markers);
     this._setMapOnAll(this.map, this.visibleMarkers);
+  }
+
+  _updateAndOpenInfoWindow(marker) {
+    let div = `<div>SOMETHING</div>`;
+    this.infoWindow.setContent(div);
+    this.infoWindow.open(this.map, marker);
   }
 
   _setMapOnAll(map, markers) {
@@ -151,7 +168,6 @@ class ViewModel {
           return true;
         }
       }
-
       return false;
     });
 
