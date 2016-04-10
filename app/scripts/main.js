@@ -18,6 +18,8 @@ const defaultLocations = {
   newyork: new google.maps.LatLng(40.69847032728747, -73.9514422416687)
 };
 
+const markerAnimationTimeout = 1000;
+
 class ViewModel {
   constructor() {
     this.map = new google.maps.Map(document.getElementById('map'), {
@@ -141,7 +143,11 @@ class ViewModel {
           lat: this.position.lat,
           lng: this.position.lng,
         });
+        self._resetMarkerAnimations();
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(() => marker.setAnimation(null), markerAnimationTimeout);
       });
+
 
       this.markers.push(marker);
       this.visibleMarkers.push(marker);
@@ -162,13 +168,22 @@ class ViewModel {
     // Object can be either a marker or a placeModel
     let marker =  this._findMarker(object.lat(), object.lng());
     let div = `
-      <div>
+      <div class='info-window'>
         ${marker.place.name()}
-        ${marker.place.rating()}
+        <br>
+        <i class='info-window__rating__logo material-icons'>star</i>
+        ${(Helper.isNullOrUndefined(marker.place.rating())) ?
+          'No ratings' : marker.place.rating()}
       </div>
     `;
     this.infoWindow.setContent(div);
     this.infoWindow.open(this.map, marker);
+  }
+
+  _resetMarkerAnimations() {
+    this.visibleMarkers.forEach((marker) => {
+      marker.setAnimation(null);
+    });
   }
 
   _setMapOnAll(map, markers) {
