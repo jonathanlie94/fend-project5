@@ -49,6 +49,7 @@ class ViewModel {
 
     this.filter.subscribe((newValue) => {
       this._toggleMarkersVisibility();
+      this.infoWindow.close();
     });
 
     this.selectedPlace = ko.observable("");
@@ -92,7 +93,7 @@ class ViewModel {
         this._initialLocation.lat(),
         this._initialLocation.lng()
       ),
-      radius: '20000'
+      radius: '50000'
     }, (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         for (let i = 0; i < results.length; i ++) {
@@ -126,16 +127,20 @@ class ViewModel {
           anchor: new google.maps.Point(0, 0)
         },
         map: this.map,
-        title: place.name(),
         animation: google.maps.Animation.DROP,
       });
+
+      marker.place = place;
 
       let self = this;
 
       marker.addListener('click', function () {
         let infoWindow = self.infoWindow;
         infoWindow.close();
-        self._updateAndOpenInfoWindow(this); // Pass the marker itself
+        self._updateAndOpenInfoWindow({
+          lat: this.position.lat,
+          lng: this.position.lng,
+        });
       });
 
       this.markers.push(marker);
@@ -146,8 +151,22 @@ class ViewModel {
     this._setMapOnAll(this.map, this.visibleMarkers);
   }
 
-  _updateAndOpenInfoWindow(marker) {
-    let div = `<div>SOMETHING</div>`;
+  _findMarker(lat, lng) {
+    return this.visibleMarkers.filter((visibleMarker) => {
+      return (visibleMarker.position.lat() == lat &&
+        visibleMarker.position.lng() == lng);
+    })[0];
+  }
+
+  _updateAndOpenInfoWindow(object) {
+    // Object can be either a marker or a placeModel
+    let marker =  this._findMarker(object.lat(), object.lng());
+    let div = `
+      <div>
+        ${marker.place.name()}
+        ${marker.place.rating()}
+      </div>
+    `;
     this.infoWindow.setContent(div);
     this.infoWindow.open(this.map, marker);
   }

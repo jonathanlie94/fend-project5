@@ -22,8 +22,8 @@
           </div>
 
         </div>
-        <ul class="nbm-list"data-bind="foreach: filteredPlaces">
-          <li class="nbm-list__item" data-bind="text: name">
+        <ul class="nbm-list" data-bind="foreach: filteredPlaces">
+          <li class="nbm-list__item" data-bind="click: $root._updateAndOpenInfoWindow.bind($root)">
             <div data-bind="text:name"></div>
             <div data-bind="text:"></div>
           </li>
