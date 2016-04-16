@@ -1,17 +1,5 @@
-.nbm-side-content
-  width: 350px
-  max-width: 350px
-  height: 100%
-  max-height: 100%
-  position: relative
-  color: $white1
-  overflow-y: auto
-  overflow-x: hidden
-  vertical-align: top
-
 .nbm-search-bar
   padding: 0 1em
-  width: 350px
   border-bottom: 1px solid $blue
   font-size: 20px
   height: 3em
@@ -26,7 +14,7 @@
     .material-icons
       font-size: 1em
   &__content
-    width: calc(100% - 4em)
+    width: calc(100% - 2em)
     vertical-align: middle
     display: inline-block
 
@@ -37,12 +25,21 @@
 
 .nbm-list
   margin-top: 5em
-  overflow-y: scroll
-  width: 350px
   &__item
-    padding: 0.5em 0 0.5em 4em
+    padding: 0.5em 0.5em 0.5em 2em
     line-height: 32px
     display: block
     cursor: pointer
+    font-size: 0.875em
+    border-bottom: 1px solid $white1
     &:hover
       background-color: $pink
+
+.mdl-layout__drawer
+  background-color: $indigo
+  color: $white1
+
+.mdl-layout__drawer-button
+  background-color: $indigo
+  i
+    color: $white1

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500" rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://code.getmdl.io/1.1.2/material.pink-indigo.min.css" rel="stylesheet">
@@ -8,34 +9,35 @@
   </head>
   <body>
     <div class="nbm-main-container">
-      <div class="nbm-side-content">
-        <div class="nbm-search-bar">
-          <div class="nbm-search-bar__icon">
-            <i class="material-icons">search</i>
+      <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+        <div class="mdl-layout__drawer">
+          <div class="nbm-search-bar">
+            <div class="nbm-search-bar__icon">
+              <i class="material-icons">search</i>
+            </div>
+            <div class="nbm-search-bar__content">
+              <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" data-bind='value: filter,
+                  valueUpdate: "afterkeydown"' type="text" id="search-keyword">
+                <label class="mdl-textfield__label" for="search-keyword"></label>
+              </div>
+            </div>
+
           </div>
-          <div class="nbm-search-bar__content">
-            <div class="mdl-textfield mdl-js-textfield">
-              <input class="mdl-textfield__input" data-bind='value: filter,
-                valueUpdate: "afterkeydown"' type="text" id="search-keyword">
-              <label class="mdl-textfield__label" for="search-keyword"></label>
+          <div class="nbm-list" data-bind="foreach: filteredPlaces">
+            <div class="nbm-list__item" data-bind="click: $root._updateAndOpenInfoWindow.bind($root)">
+              <div data-bind="text:name"></div>
+              <div data-bind="text:"></div>
             </div>
           </div>
-
         </div>
-        <ul class="nbm-list" data-bind="foreach: filteredPlaces">
-          <li class="nbm-list__item" data-bind="click: $root._updateAndOpenInfoWindow.bind($root)">
-            <div data-bind="text:name"></div>
-            <div data-bind="text:"></div>
-          </li>
-
-        </ul>
-      </div>
-      <div class="nbm-main-content">
-        <div id="map"></div>
+        <main class="mdl-layout__content">
+          <div class="page-content"><div id="map"></div></div>
+        </main>
       </div>
     </div>
   </body>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=en&key=AIzaSyCtT0znrs_Zvlxg6WYqrLoNNtr1nF1Cjh8&libraries=places"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=en&libraries=places"></script>
   <script type="text/javascript" src="main.js"></script>
   <script defer src="https://code.getmdl.io/1.1.2/material.min.js"></script>
 </html>

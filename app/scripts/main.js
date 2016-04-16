@@ -24,7 +24,8 @@ const markerAnimationTimeout = 750;
 class ViewModel {
   constructor() {
     this.map = new google.maps.Map(document.getElementById('map'), {
-      zoom: zoomLevel
+      zoom: zoomLevel,
+      disableDefaultUI: true,
     });
 
     this.markers = [];
@@ -210,8 +211,7 @@ class ViewModel {
 
     let div = `
       <div class='info-window'>
-        ${marker.place.name()}
-        <br>
+        <div class='info-window__title'>${marker.place.name()}</div>
         <i class='info-window__rating__logo material-icons'>star</i>
         ${(Helper.isNullOrUndefined(marker.place.rating())) ?
           'No ratings' : marker.place.rating()}
