@@ -3,14 +3,7 @@ import Helper from 'utils/helper';
 import PlaceModel from 'models/placeModel';
 import Global from 'utils/global';
 import API from 'utils/api';
-
-/* TODO:
-  1. Custom InfoWindow, containing info from Google Maps Places,
-     and Foursquare, and Yelp Search API
-  2. Show error messages if third-party API failed at the top
-  3. Cater for responsiveness across different screen sizes (change side content
-     to MDL layout)
-*/
+import ErrorDisplayer from 'utils/errorDisplayer';
 
 const zoomLevel = 10;
 
@@ -28,8 +21,8 @@ class ViewModel {
       disableDefaultUI: true,
     });
 
-    this.markers = [];
-    this.visibleMarkers = [];
+    this.markers = [];  // Collection of all markers
+    this.visibleMarkers = []; // Only markers that are visible
 
     this._browserSupportFlag = false;
     this._initialLocation = null;
@@ -82,9 +75,13 @@ class ViewModel {
   _handleNoGeolocation(errorFlag) {
     if (errorFlag == true) {
       this._initialLocation = defaultLocations.siberia;
+      ErrorDisplayer.setErrorMessage(`Your browser does not support Geolocation.
+        Setting default location to Siberia..`);
     }
     else {
       this._initialLocation = defaultLocations.newyork;
+      ErrorDisplayer.setErrorMessage(`Your browser does not support Geolocation.
+        Setting default location to New York..`);
     }
     this.map.setCenter(this._initialLocation);
     this.requestPlaces();
@@ -113,12 +110,17 @@ class ViewModel {
           }));
         }
         this._plotMarkers();
+      } else {
+        ErrorDisplayer.setErrorMessage(`There was an error in loading
+          information from Google Places API. Please refresh the page.`);
       }
     });
   }
 
   _plotMarkers() {
     this.places().forEach((place) => {
+      let self = this;
+
       let marker = new google.maps.Marker({
         position: new google.maps.LatLng(
           place.lat(),
@@ -134,10 +136,10 @@ class ViewModel {
         animation: google.maps.Animation.DROP,
       });
 
+      // Bind the place object into the marker
       marker.place = place;
 
-      let self = this;
-
+      // Add click listener to marker to update and open info window
       marker.addListener('click', function () {
         let infoWindow = self.infoWindow;
         infoWindow.close();
@@ -174,8 +176,7 @@ class ViewModel {
     marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(() => marker.setAnimation(null), markerAnimationTimeout);
 
-    // Request Foursquare API
-
+    // Make ajax request to Foursquare Venues API
     API.callAPI(Global.Foursquare.apiUrl, {
       data: {
         'client_id': Global.Foursquare.clientId,
@@ -192,6 +193,8 @@ class ViewModel {
       },
       errorCallback: (error) => {
         this._renderInfoWindow(marker);
+        ErrorDisplayer.setErrorMessage(`There was an error in loading information from
+          Foursquare API.`);
       }
     });
   }
@@ -199,7 +202,7 @@ class ViewModel {
   _renderInfoWindow(marker, venues) {
     let recommendedPlaces;
     if (Helper.isNullOrUndefined(venues)) {
-      recommendedPlaces = 'An error occured while retrieving data from Foursquare.';
+      recommendedPlaces = 'Data from Foursquare not found.';
     } else {
       recommendedPlaces = 'Recommended places nearby:';
       venues.forEach((venue) => {
@@ -209,6 +212,7 @@ class ViewModel {
       recommendedPlaces += '<br>Powered by Foursquare';
     }
 
+    // HTML element to be rendered inside InfoWindow
     let div = `
       <div class='info-window'>
         <div class='info-window__title'>${marker.place.name()}</div>

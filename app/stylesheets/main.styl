@@ -41,11 +41,14 @@ html
 
 .nbm-error-message
   &__container
+    visibility: hidden
+    display: none
     position: fixed
     z-index: 99999
     padding: 1em
     bottom: 0%
     width: 100%
     background-color: $red
+    transition: 0.5s ease
   &__text
     color: $white1
