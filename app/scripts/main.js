@@ -1,6 +1,8 @@
 import ko from 'knockout';
 import Helper from 'utils/helper';
 import PlaceModel from 'models/placeModel';
+import Global from 'utils/global';
+import API from 'utils/api';
 
 /* TODO:
   1. Custom InfoWindow, containing info from Google Maps Places,
@@ -138,6 +140,7 @@ class ViewModel {
       marker.addListener('click', function () {
         let infoWindow = self.infoWindow;
         infoWindow.close();
+
         self._updateAndOpenInfoWindow({
           lat: this.position.lat,
           lng: this.position.lng,
@@ -146,6 +149,7 @@ class ViewModel {
 
       this.markers.push(marker);
       this.visibleMarkers.push(marker);
+
     });
 
     this._setMapOnAll(null, this.markers);
@@ -168,6 +172,42 @@ class ViewModel {
     this._resetMarkerAnimations();
     marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(() => marker.setAnimation(null), markerAnimationTimeout);
+
+    // Request Foursquare API
+
+    API.callAPI(Global.Foursquare.apiUrl, {
+      data: {
+        'client_id': Global.Foursquare.clientId,
+        'client_secret': Global.Foursquare.clientSecret,
+        'v': moment().format('YYYYMMDD'),
+        'll': object.lat() + ',' + object.lng(),
+        'radius': 250,
+        'section': 'topPicks'
+      },
+      successCallback: (result) => {
+        this._renderInfoWindow(marker, result.response.groups[0].items.map((item) => {
+          return item.venue;
+        }));
+      },
+      errorCallback: (error) => {
+        this._renderInfoWindow(marker);
+      }
+    });
+  }
+
+  _renderInfoWindow(marker, venues) {
+    let recommendedPlaces;
+    if (Helper.isNullOrUndefined(venues)) {
+      recommendedPlaces = 'An error occured while retrieving data from Foursquare.';
+    } else {
+      recommendedPlaces = 'Recommended places nearby:';
+      venues.forEach((venue) => {
+        recommendedPlaces += '<br>';
+        recommendedPlaces += '- ' + venue.name;
+      });
+      recommendedPlaces += '<br>Powered by Foursquare';
+    }
+
     let div = `
       <div class='info-window'>
         ${marker.place.name()}
@@ -175,6 +215,10 @@ class ViewModel {
         <i class='info-window__rating__logo material-icons'>star</i>
         ${(Helper.isNullOrUndefined(marker.place.rating())) ?
           'No ratings' : marker.place.rating()}
+        <br>
+        <br>
+        ${recommendedPlaces}
+        <br>
       </div>
     `;
     this.infoWindow.setContent(div);
@@ -195,7 +239,7 @@ class ViewModel {
 
   _toggleMarkersVisibility() {
     this._setMapOnAll(null, this.visibleMarkers);
-    console.log(this.visibleMarkers);
+
     this.visibleMarkers = this.markers.filter((marker) => {
       const filteredPlaces = this.filteredPlaces();
 
@@ -206,7 +250,6 @@ class ViewModel {
       }
       return false;
     });
-    console.log(this.visibleMarkers);
 
     this._setMapOnAll(this.map, this.visibleMarkers);
   }

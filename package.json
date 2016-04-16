@@ -29,7 +29,9 @@
   "homepage": "https://github.com/jonathanlie94/fend-project5#readme",
   "dependencies": {
     "async": "^1.5.2",
-    "knockout": "^3.4.0"
+    "jquery": "^2.2.3",
+    "knockout": "^3.4.0",
+    "moment": "^2.12.0"
   },
   "devDependencies": {
     "babel-core": "^6.6.0",

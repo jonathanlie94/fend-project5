@@ -7,6 +7,14 @@ class Helper {
   static isNullOrUndefined(object) {
     return typeof object === 'null' || typeof object === 'undefined';
   }
+
+  static formatDate(date) {
+
+  }
+
+  static getCurrentDate(date) {
+    
+  }
 }
 
 export default Helper;

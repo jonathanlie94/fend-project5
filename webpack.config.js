@@ -4,6 +4,7 @@ var path = require('path');
 var buildType = process.env.npm_config_type;
 
 var providePlugin = new webpack.ProvidePlugin({
+  moment: 'moment',
   $: 'jquery',
   classNames: 'classnames'
 });
