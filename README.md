@@ -7,11 +7,9 @@ This application uses Foursquare's Venues API as part of its functionality to sh
 It should be noted that even though the application project rubric requests the build directory to be included, the build is *NOT* included in the repository. Please run the following code:
 ```
 npm install
-```
-```
+npm run build
 npm start
 ```
-
 Once done, open the following page:
 ```
 localhost:8080
