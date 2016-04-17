@@ -13,22 +13,24 @@ class API {
       processData: true,
       contentType: 'application/json',
       data: query.data,
-      done: typeof query.successCallback === 'function' ?
-        query.successCallback : function (data, status) {
-          console.log(status);
-          console.log(data);
-        },
-      fail: function (jqXHR, status, error) {
-        console.error(status, url);
-        console.error(error);
-        if (typeof jqXHR.responseJSON !== 'undefined') {
-          if (typeof query.errorCallback === 'function') {
-            query.errorCallback(jqXHR.responseJSON.message ||
-                                [jqXHR.responseJSON.error]);
-          }
-        } else if (typeof query.errorCallback === 'function') {
-          query.errorCallback('');
+      success:
+      error:
+    })
+    .done(typeof query.successCallback === 'function' ?
+      query.successCallback : data, status) => {
+        console.log(status);
+        console.log(data);
+      })
+    .fail((jqXHR, status, error) => {
+      console.error(status, url);
+      console.error(error);
+      if (typeof jqXHR.responseJSON !== 'undefined') {
+        if (typeof query.errorCallback === 'function') {
+          query.errorCallback(jqXHR.responseJSON.message ||
+                              [jqXHR.responseJSON.error]);
         }
+      } else if (typeof query.errorCallback === 'function') {
+        query.errorCallback('');
       }
     });
   }
