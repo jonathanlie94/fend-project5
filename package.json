@@ -2,7 +2,7 @@
   "name": "fend-project5",
   "version": "1.0.0",
   "description": "Udacity Front End Web Developer Nanodegree Project 5",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm-run-all build:js build:css build:html build:asset",
@@ -10,7 +10,7 @@
     "build:css": "stylus app/stylesheets/main.styl -o build/main.css",
     "build:html": "cat app/html/index.html > build/index.html",
     "build:asset": "cp -a app/assets/. build/assets",
-    "start": "npm-run-all --parallel watch -s serve -s",
+    "start": "npm-run-all --parallel watch serve",
     "serve": "http-server -p 8080 build/",
     "watch": "npm-run-all --parallel watch:js watch:css watch:html watch:asset",
     "watch:js": "webpack --config webpack.config.js --progress --profile --colors --watch",

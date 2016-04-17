@@ -13,12 +13,12 @@ class API {
       processData: true,
       contentType: 'application/json',
       data: query.data,
-      success: typeof query.successCallback === 'function' ?
+      done: typeof query.successCallback === 'function' ?
         query.successCallback : function (data, status) {
           console.log(status);
           console.log(data);
         },
-      error: function (jqXHR, status, error) {
+      fail: function (jqXHR, status, error) {
         console.error(status, url);
         console.error(error);
         if (typeof jqXHR.responseJSON !== 'undefined') {

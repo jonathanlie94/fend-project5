@@ -5,11 +5,36 @@ import Global from 'utils/global';
 import API from 'utils/api';
 import ErrorDisplayer from 'utils/errorDisplayer';
 
+function onMapLoadSuccess() {
+  ko.applyBindings(new ViewModel());
+}
+
+function onMapLoadError() {
+  ErrorDisplayer.setErrorMessage(`There is an error in loading Google Maps.
+    Please refresh the page.`);
+}
+
+// Load map
+
+$.getScript(Global.Google.googleMapUrl)
+  .done(() => {
+    onMapLoadSuccess();
+  })
+  .fail(() => {
+    onMapLoadError();
+  })
+
 const zoomLevel = 10;
 
 const defaultLocations = {
-  siberia: new google.maps.LatLng(60, 105),
-  newyork: new google.maps.LatLng(40.69847032728747, -73.9514422416687)
+  siberia: {
+    lat: 60,
+    lng: 105,
+  },
+  newyork: {
+    lat: 40.69847032728747,
+    lng: -73.9514422416687,
+  }
 };
 
 const markerAnimationTimeout = 750;
@@ -59,7 +84,8 @@ class ViewModel {
     if (navigator.geolocation) {
       this._browserSupportFlag = true;
       navigator.geolocation.getCurrentPosition((position) => {
-          this._initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          this._initialLocation = new google.maps.LatLng(
+            position.coords.latitude, position.coords.longitude);
           this.map.setCenter(this._initialLocation);
           this.requestPlaces();
         }, () => this._handleNoGeolocation(this._browserSupportFlag)
@@ -74,12 +100,14 @@ class ViewModel {
 
   _handleNoGeolocation(errorFlag) {
     if (errorFlag == true) {
-      this._initialLocation = defaultLocations.siberia;
+      this._initialLocation = new google.maps.LatLng(defaultLocations.siberia.lat,
+        defaultLocations.siberia.lng);
       ErrorDisplayer.setErrorMessage(`Your browser does not support Geolocation.
         Setting default location to Siberia..`);
     }
     else {
-      this._initialLocation = defaultLocations.newyork;
+      this._initialLocation = new google.maps.LatLng(defaultLocations.newyork.lat,
+        defaultLocations.newyork.lng);
       ErrorDisplayer.setErrorMessage(`Your browser does not support Geolocation.
         Setting default location to New York..`);
     }
@@ -260,5 +288,3 @@ class ViewModel {
 }
 
 export default ViewModel;
-
-ko.applyBindings(new ViewModel());
