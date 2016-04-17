@@ -62,9 +62,7 @@ class ViewModel {
         return this.places();
       } else {
         return ko.utils.arrayFilter(this.places(), (place) => {
-          return (Helper.containsKeywords(place.name(), this.filter())) ||
-            (Helper.containsKeywords(place.vicinity(), this.filter())) ||
-            (Helper.containsKeywords(place.types(), this.filter()))
+          return (Helper.containsKeywords(place.name(), this.filter()));
         });
       }
     });
