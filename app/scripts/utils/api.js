@@ -13,11 +13,9 @@ class API {
       processData: true,
       contentType: 'application/json',
       data: query.data,
-      success:
-      error:
     })
     .done(typeof query.successCallback === 'function' ?
-      query.successCallback : data, status) => {
+      query.successCallback : (data, status) => {
         console.log(status);
         console.log(data);
       })
