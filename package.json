@@ -1,5 +1,5 @@
 {
-  "name": "fend-project5",
+  "name": "neighbourhood-map",
   "version": "1.0.0",
   "description": "Udacity Front End Web Developer Nanodegree Project 5",
   "main": "main.js",
@@ -21,14 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jonathanlie94/fend-project5.git"
+    "url": "git+https://github.com/jonathanlie94/neighbourhood-map.git"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jonathanlie94/fend-project5/issues"
-  },
-  "homepage": "https://github.com/jonathanlie94/fend-project5#readme",
   "dependencies": {
     "async": "^1.5.2",
     "express": "^4.15.3",
