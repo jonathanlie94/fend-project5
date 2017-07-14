@@ -16,7 +16,8 @@
     "watch:js": "webpack --config webpack.config.js --progress --profile --colors --watch",
     "watch:css": "watch \"npm run build:css\" app/stylesheets --wait=2",
     "watch:html": "watch \"npm run build:html\" app/html",
-    "watch:asset": "watch \"npm run build:asset\" app/assets --wait=5"
+    "watch:asset": "watch \"npm run build:asset\" app/assets --wait=5",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
   "homepage": "https://github.com/jonathanlie94/fend-project5#readme",
   "dependencies": {
     "async": "^1.5.2",
+    "express": "^4.15.3",
     "jquery": "^2.2.3",
     "knockout": "^3.4.0",
     "moment": "^2.12.0",
