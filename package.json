@@ -44,7 +44,7 @@
     "http-server": "^0.9.0",
     "style-loader": "^0.13.0",
     "stylus": "^0.53.0",
-    "watch": "^0.17.1",
+    "watch": "^0.17.1"
   },
   "engines": {
     "node": "6.11.0"
